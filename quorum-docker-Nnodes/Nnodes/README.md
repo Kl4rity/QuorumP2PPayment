@@ -1,13 +1,12 @@
 # Exposition of *setup.sh*
 
-The *setup.sh* script creates a basic Quorum network with Raft consensus. There's a whole bunch of things it needs to do in order to achieve this, some specific to Quorum, some common to private Ethereum chains in general.
+The *setup.sh* script creates a basic Quorum network with the genesis file configured for Istanbul consensus.
 
 This is what we set up for each node.
 
- * Enode and *nodekey* file to uniquely identify each node on the network.
-   * *static-nodes.json* file that lists the Enodes of nodes that can participate in the Raft consensus.
  * Ether account and *keystore* directory for each node.
    * The account gets written into the *genesis.json* file that each node runs once to bootstrap the blockchain.
+   * **YET the genesis.json still needs to be modified before bootstrapping the node!**
  * The *tm.conf* file that tells Quorum where all the node's keys are and where all the other nodes are.
  * Public/private Keypairs for Quorum private transactions.
  * A script for starting the Geth and Constellation processes in each container, *start-node.sh*.
@@ -16,10 +15,6 @@ This is what we set up for each node.
 In addition we create some utility scripts on the host.
 
   * A *docker-compose.yml* file that can be used with docker-compose to create the network of containers.
-  * Two sample contract creation scripts:
-    * *contract_pub.js* - creates a public contract, visible to all.
-    * *contract_pri.js* - creates a private contract between the sender and Node 2.
-
 
 Refer to the *setup.sh* file itself for the full code.
 
@@ -40,7 +35,7 @@ The docker image is used during set-up to run Geth, Bootnode and Constellation t
 
 ## House-keeping
 
-The sample private transaction we will create later is designed to be sent from Node 1 to Node 2, so we demand that there be at least two nodes configured.
+At least two nodes have to be configured in the current version. 
 
     if [[ ${#ips[@]} < 2 ]]
     then
@@ -96,9 +91,11 @@ On the Docker host, we create a *qdata_N/* directory for each node, with this st
 
 ## Create Enode information and *static-nodes.json*
 
-Each node is assigned an Enode, which is the public key corresponding to a private *nodekey*. This Enode is what identifies the node on the Ethereum network. Membership of our private network is defined by the Enodes listed in the *static-nodes.json* file. These are the nodes that can participate in the Raft consensus.
+**This part is not supported with our iteration of this process. The enode information currently has to be gathered from up-and-running nodes, since the upgrade from Quorum 1.2.0 to Quorum 2.0.2 broke this process.**
 
-We use Geth's *bootnode* utility to generate the Enode and the private key. By jumping through some hoops to get the file permissions right we can use the version of *bootnode* already present in the Docker image.
+*Each node is assigned an Enode, which is the public key corresponding to a private *nodekey*. This Enode is what identifies the node on the Ethereum network. Membership of our private network is defined by the Enodes listed in the *static-nodes.json* file. These are the nodes that can participate in the Raft consensus.
+
+We use Geth's *bootnode* utility to generate the Enode and the private key. By jumping through some hoops to get the file permissions right we can use the version of *bootnode* already present in the Docker image.*
 
     #### Make static-nodes.json and store keys #############################
 
@@ -121,7 +118,8 @@ We use Geth's *bootnode* utility to generate the Enode and the private key. By j
 
 ## Create Ethereum accounts and *genesis.json* file
 
-To allow nodes to send transactions they will need some Ether. This is required in Quorum, even though gas is zero cost. For simplicity we create an account and private key for each node, and we create the genesis block such that each of the accounts is pre-cherged with a billion Ether (10^27 Wei).
+To allow nodes to send transactions they will need some Ether. This is required in Quorum, even though gas is zero cost. For simplicity we create an account and private key for each node, and we create the genesis block such that each of the accounts is pre-cherged with a billion Ether (10^27 Wei). 
+**Everything after initial balances is consensus-mechanism-specific, so we exchanged it for an Istanbul-Consensus-compatible part.**
 
 The Geth executable in the Docker image is used to create the accounts. An empty *passwords.txt* file is created which is used when unlocking the (passwordless) Ether account for each node when starting Geth in *start-node.sh*.
 
@@ -154,19 +152,46 @@ The Geth executable in the Docker image is used to create the accounts. An empty
 
     cat >> genesis.json <<EOF
       },
-      "coinbase": "0x0000000000000000000000000000000000000000",
-      "config": {
-        "homesteadBlock": 0
-      },
-      "difficulty": "0x0",
-      "extraData": "0x",
-      "gasLimit": "0x2FEFD800",
-      "mixhash": "0x00000000000000000000000000000000000000647572616c65787365646c6578",
-      "nonce": "0x0",
-      "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-      "timestamp": "0x00"
-    }
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "config": {
+        "homesteadBlock": 1,
+        "eip150Block": 2,
+        "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "eip155Block": 3,
+        "eip158Block": 3,
+        "istanbul": {
+        "epoch": 30000,
+        "policy": 0
+        },
+        "isQuorum": true
+    },
+    "extraData": "[PASTE YOUR ISTANBUL-TOOLS GENERATED EXTRADATA (SPECIFIC FOR YOUR NODE-KEYS) HERE]",
+    "gasLimit": "0x47b760",
+    "difficulty": "0x1",
+    "mixHash": "0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365",
+    "nonce": "0x0",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": "0x00"
+    }   
     EOF
+
+** It should be noted here that, once the setup script has run, you will have access to the keys generated for each Node. You will need to create a config.toml file which contains the following information:
+
+    vanity = "0x0000000000000000000000000000000000000000000000000000000000000000"
+    validators = ["0xNode1Address",
+    "0xNode2Address",
+    "0xNode3Address",
+    ...]
+
+You will then need to run the command...
+    istanbul extra encode --config ./config.toml
+... made available to you here: https://github.com/getamis/istanbul-tools
+
+This is important since the extraData field in your genesis-file encodes the Addresses of the Nodes that are validators in your Istanbul network.
+
+You can find the addresses for your node in the genesis-file for your network - just pick any of them and the nodes will be listed there since you are pre-funding them there. Just ensure that they are hex (add a 0x in front of the address if it is not there yet).
+
+It is important that you complete this step BEFORE you docker-compose up -d the first time! **
 
 The account created for each node will be available as `eth.accounts[0]` in the node's console.
 
@@ -261,17 +286,3 @@ This is the first file that is not written to the node-specific directories. Thi
           config:
           - subnet: $subnet
     EOF
-
-## Create pre-populated contracts
-
-For convenience, we provide a couple of scripts that create contracts, one public, one private. The private contract needs to know Node 2's key since that is the node we will share the contract with, so we copy in the key we generated earlier. Templates for the contracts are in the *templates/* directory.
-
-    #### Create pre-populated contracts ####################################
-
-    # Private contract - insert Node 2 as the recipient
-    cat templates/contract_pri.js \
-        | sed s:_NODEKEY_:`cat qdata_2/keys/tm.pub`:g \
-              > contract_pri.js
-
-    # Public contract - no change required
-    cp templates/contract_pub.js ./
