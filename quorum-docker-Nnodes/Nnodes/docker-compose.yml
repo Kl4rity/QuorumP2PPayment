@@ -1,0 +1,40 @@
+version: '2'
+services:
+  node_1:
+    image: quorum
+    volumes:
+      - './qdata_1:/qdata'
+    networks:
+      quorum_net:
+        ipv4_address: '192.168.65.10'
+    ports:
+      - 22001:8545
+    user: '501:20'
+  node_2:
+    image: quorum
+    volumes:
+      - './qdata_2:/qdata'
+    networks:
+      quorum_net:
+        ipv4_address: '192.168.65.11'
+    ports:
+      - 22002:8545
+    user: '501:20'
+  node_3:
+    image: quorum
+    volumes:
+      - './qdata_3:/qdata'
+    networks:
+      quorum_net:
+        ipv4_address: '192.168.65.12'
+    ports:
+      - 22003:8545
+    user: '501:20'
+
+networks:
+  quorum_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.168.65.0/24

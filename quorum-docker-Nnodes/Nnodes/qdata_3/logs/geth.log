@@ -1,0 +1,37 @@
+ERROR[06-24|15:16:22] Node URL enode://@192.168.65.10:30303?discport=0: invalid node ID (wrong length, want 128 hex chars)
+ 
+ERROR[06-24|15:16:22] Node URL enode://@192.168.65.11:30303?discport=0: invalid node ID (wrong length, want 128 hex chars)
+ 
+ERROR[06-24|15:16:22] Node URL enode://@192.168.65.12:30303?discport=0: invalid node ID (wrong length, want 128 hex chars)
+ 
+INFO [06-24|15:16:22] Starting peer-to-peer node               instance=Geth/v1.7.2-stable-df4267a2/linux-amd64/go1.7.3
+INFO [06-24|15:16:22] Allocated cache and file handles         database=/qdata/dd/geth/chaindata cache=128 handles=1024
+WARN [06-24|15:16:22] Upgrading database to use lookup entries 
+INFO [06-24|15:16:22] Initialised chain configuration          config="{ChainID: <nil> Homestead: 1 DAO: <nil> DAOSupport: false EIP150: 2 EIP155: 3 EIP158: 3 Byzantium: <nil> IsQuorum: true Engine: istanbul}"
+INFO [06-24|15:16:22] Initialising Ethereum protocol           versions="[63 62]" network=1
+INFO [06-24|15:16:22] Database deduplication successful        deduped=0
+INFO [06-24|15:16:22] Loaded most recent local header          number=0 hash=44d162…46d259 td=1
+INFO [06-24|15:16:22] Loaded most recent local full block      number=0 hash=44d162…46d259 td=1
+INFO [06-24|15:16:22] Loaded most recent local fast block      number=0 hash=44d162…46d259 td=1
+INFO [06-24|15:16:22] Regenerated local transaction journal    transactions=0 accounts=0
+INFO [06-24|15:16:22] Starting P2P networking 
+INFO [06-24|15:16:24] UDP listener up                          self=enode://2606b962c7c6ddfeb1050b59197bec7d7fcfdd7b14251f97f15b305268e7c84e3b039d64b8976509e2b74f3107d215b93552ee71d071141f140e50f93239fd27@[::]:30303
+INFO [06-24|15:16:24] RLPx listener up                         self=enode://2606b962c7c6ddfeb1050b59197bec7d7fcfdd7b14251f97f15b305268e7c84e3b039d64b8976509e2b74f3107d215b93552ee71d071141f140e50f93239fd27@[::]:30303
+INFO [06-24|15:16:24] IPC endpoint opened: /qdata/dd/geth.ipc 
+INFO [06-24|15:16:24] HTTP endpoint opened: http://0.0.0.0:8545 
+INFO [06-24|15:16:25] Unlocked account                         address=0x3229c42a11075E9AD61f3E199C935a59cD9c1B3e
+INFO [06-24|15:16:25] Transaction pool price threshold updated price=18000000000
+INFO [06-24|15:16:25] Starting mining operation 
+INFO [06-24|15:16:25] Commit new mining work                   number=1 txs=0 uncles=0 elapsed=151.575µs
+WARN [06-24|15:16:25] Block sealing failed                     err=unauthorized
+ERROR[06-24|15:16:35] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:16:47] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:17:01] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:17:19] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:17:45] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:18:27] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:19:41] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:21:59] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:26:25] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:35:07] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"
+ERROR[06-24|15:52:21] Failed to decode message from payload    address=0xb1d86835dcE7F65A1c8483e1A83844ba026ddeF0 err="unauthorized address"

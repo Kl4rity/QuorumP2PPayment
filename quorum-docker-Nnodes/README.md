@@ -6,6 +6,9 @@ Run a bunch of Quorum nodes using Istanbul, each in a separate Docker container.
 
 This is simply a learning exercise for configuring Quorum networks. Probably best not used in a production environment.
 
+## Cleaning
+As it stands, the repo is populated with a currently working example of our choosing. If you want to clear our data, please run setup.sh.
+
 ## Building
 
 In the top level directory:
