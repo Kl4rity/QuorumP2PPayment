@@ -10,10 +10,9 @@ set -e
 ### Configuration Options
 TMCONF=/qdata/tm.conf
 
-# // TODO  -Anpassen Startbefehle -- statt --raft am Ende Istanbul einfügen.
-
+# RAFT Version commented out.
 # GETH_ARGS="--datadir /qdata/dd --raft --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum --nodiscover --unlock 0 --password /qdata/passwords.txt"
-GETH_ARGS="--datadir /qdata/dd --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul --nodiscover --unlock 0 --password /qdata/passwords.txt"
+GETH_ARGS="--datadir /qdata/dd --mine --minerthreads 1 --syncmode full --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul --unlock 0 --password /qdata/passwords.txt"
 
 
 if [ ! -d /qdata/dd/geth/chaindata ]; then
